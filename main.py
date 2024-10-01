@@ -1,7 +1,10 @@
 import math
 import random
 import getpass
+import threading
 from connection import conectar  # Importa la función conectar desde connection.py
+from dashboard import iniciar_dashboard
+
 
 # Función para registrar un usuario
 def registrar_usuario():
@@ -109,10 +112,11 @@ def menu():
         print("\n----- Menú -----")
         print("1. Registrar usuario")
         print("2. Iniciar sesión")
-        print("3. Añadir datos tabla 2 (Serie Trigonométrica 1 - Seno)")
-        print("4. Añadir datos tabla 3 (Serie Trigonométrica 2 - Coseno)")
+        print("3. Añadir datos tabla 1 (Serie Trigonométrica 1 - Seno)")
+        print("4. Añadir datos tabla 2 (Serie Trigonométrica 2 - Coseno)")
         print("5. Añadir datos tabla 3 (Serie Trigonométrica 3 - Tangente)")
-        print("6. Salir")
+        print("6. Dashboard")
+        print("7. Salir")
 
         opcion = input("Seleccione una opción: ")
 
@@ -139,6 +143,10 @@ def menu():
             else:
                 print("Debes iniciar sesión primero.")
         elif opcion == "6":
+            # Ejecutar el dashboard en un hilo separado
+            hilo_dashboard = threading.Thread(target=iniciar_dashboard)
+            hilo_dashboard.start()
+        elif opcion == "7":
             print("Saliendo del programa.")
             break
         else:

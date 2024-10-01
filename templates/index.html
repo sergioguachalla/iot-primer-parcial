@@ -3,25 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard en Tiempo Real</title>
+    <title>Dashboard de Series Trigonométricas</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        .graph-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+        .graph {
+            width: 45%;
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gráfico en Tiempo Real</h1>
-    <div id="grafico" style="width:100%;height:600px;"></div>
+    <h1>Dashboard de Series Trigonométricas por Usuario</h1>
+    
+    <!-- Contenedor para los gráficos -->
+    <div class="graph-container">
+        <div class="graph" id="seno"></div>
+        <div class="graph" id="coseno"></div>
+        <div class="graph" id="tangente"></div>
+        <div class="graph" id="errores"></div>
+    </div>
 
     <script>
-        function actualizarGrafico() {
+        function actualizarGraficos() {
             $.getJSON('/datos_grafico', function(data) {
-                var grafico = document.getElementById('grafico');
-                Plotly.react(grafico, JSON.parse(data).data, JSON.parse(data).layout);
+                // Descomponer los datos de cada gráfico
+                var jsonData = JSON.parse(data);
+                var fig1Data = jsonData.data.slice(0, 3); // Datos para el gráfico del seno
+                var fig2Data = jsonData.data.slice(3, 6); // Datos para el gráfico del coseno
+                var fig3Data = jsonData.data.slice(6, 9); // Datos para el gráfico de la tangente
+
+                // Gráfico de Seno
+                Plotly.react('seno', fig1Data, {
+                    title: 'Serie de Seno',
+                    xaxis: { title: 'Usuarios' },
+                    yaxis: { title: 'Valores' }
+                });
+
+                // Gráfico de Coseno
+                Plotly.react('coseno', fig2Data, {
+                    title: 'Serie de Coseno',
+                    xaxis: { title: 'Usuarios' },
+                    yaxis: { title: 'Valores' }
+                });
+
+                // Gráfico de Tangente
+                Plotly.react('tangente', fig3Data, {
+                    title: 'Serie de Tangente',
+                    xaxis: { title: 'Usuarios' },
+                    yaxis: { title: 'Valores' }
+                });
+
+                // Gráfico de Errores Combinados
+                var combinedErrors = fig1Data[2].y.concat(fig2Data[2].y, fig3Data[2].y);
+                var combinedUsers = jsonData.data[0].x.concat(jsonData.data[3].x, jsonData.data[6].x);
+
+                Plotly.react('errores', [{
+                    x: combinedUsers,
+                    y: combinedErrors,
+                    mode: 'lines+markers',
+                    name: 'Errores Combinados',
+                    line: { color: 'red' }
+                }], {
+                    title: 'Errores Combinados de Seno, Coseno y Tangente',
+                    xaxis: { title: 'Usuarios' },
+                    yaxis: { title: 'Error' }
+                });
             });
         }
 
-        // Actualizar cada 2 segundos
-        setInterval(actualizarGrafico, 20);
-        actualizarGrafico();
+        // Actualizar cada 5 segundos
+        setInterval(actualizarGraficos, 5000);
+        actualizarGraficos();
     </script>
 </body>
 </html>
