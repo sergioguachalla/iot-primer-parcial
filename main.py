@@ -101,7 +101,7 @@ def aproximar_tangente(x, n_terminos):
         tangente_aproximada += coeficiente * x**(2*n + 1)
     return tangente_aproximada
 
-def insertar_valores_fourier(table, n, ):
+def insertar_valores_fourier(n):
     try:
         
         conexion = conectar()
@@ -168,7 +168,7 @@ def menu():
         print("2. Iniciar sesión")
         print("3. Añadir datos tabla 1 (Serie Trigonométrica 1 - Seno)")
         print("4. Añadir datos tabla 2 (Serie Trigonométrica 2 - Coseno)")
-        print("5. Añadir datos tabla 3 (Serie Trigonométrica 3 - Tangente)")
+        print("5. Añadir datos tabla 3 (Serie Trigonométrica 3 - Fourier)")
         print("6. Dashboard")
         print("7. Salir")
         opcion = input("Seleccione una opción: ")
@@ -191,7 +191,7 @@ def menu():
         elif opcion == "5":
             if usuario_id:
                 num_terminos = int(input("Ingrese el número de términos a añadir: "))
-                insertar_aproximaciones_trig("serie_trig_3", math.tan, aproximar_tangente, num_terminos, usuario_id)
+                insertar_valores_fourier(num_terminos)
             else:
                 print("Debes iniciar sesión primero.")
         elif opcion == "6":
