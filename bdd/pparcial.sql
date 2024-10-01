@@ -33,3 +33,13 @@ CREATE TABLE IF NOT EXISTS serie_trig_3 (
     valor_real FLOAT NOT NULL,
     error FLOAT NOT NULL
 );
+
+-- Modificar las tablas de series trigonométricas para que incluyan el usuario que ingresó los datos
+ALTER TABLE serie_trig_1 ADD COLUMN usuario_id INT;
+ALTER TABLE serie_trig_2 ADD COLUMN usuario_id INT;
+ALTER TABLE serie_trig_3 ADD COLUMN usuario_id INT;
+
+-- Añadir la clave foránea a las tablas de series trigonométricas
+ALTER TABLE serie_trig_1 ADD CONSTRAINT fk_usuario_serie_trig_1 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+ALTER TABLE serie_trig_2 ADD CONSTRAINT fk_usuario_serie_trig_2 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+ALTER TABLE serie_trig_3 ADD CONSTRAINT fk_usuario_serie_trig_3 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
