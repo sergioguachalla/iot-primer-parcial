@@ -8,6 +8,10 @@ from dashboard import iniciar_dashboard
 
 # Función para registrar un usuario
 def registrar_usuario():
+    '''
+    Esta función permite registrar un usuario en la base de datos, toma los datos de usuario
+    como nombre de usuario, email y contraseña. Luego inserta los datos en la tabla usuarios.
+    '''
     conexion = conectar()
     cursor = conexion.cursor()
     username = input("Ingrese nombre de usuario: ")
@@ -27,8 +31,12 @@ def registrar_usuario():
         conexion.close()
 
 # Función para iniciar sesión
-# Función para iniciar sesión
 def iniciar_sesion():
+    '''
+    Esta función permite a un usuario iniciar sesión en el sistema, solicita el nombre de usuario
+    y la contraseña. Luego verifica si las credenciales son correctas consultando la base de datos.
+    Si las credenciales son correctas, imprime un mensaje de bienvenida y devuelve el ID del usuario.
+    '''
     conexion = conectar()
     cursor = conexion.cursor()
     username = input("Ingrese nombre de usuario: ")
@@ -47,6 +55,9 @@ def iniciar_sesion():
         return None
 
 # Función para aproximar el valor del seno usando la serie de Taylor
+'''
+Esta función recibe un ángulo x y un número de términos n_terminos para aproximar el valor del seno 
+'''
 def aproximar_seno(x, n_terminos):
     seno_aproximado = 0
     for n in range(n_terminos):
@@ -57,6 +68,9 @@ def aproximar_seno(x, n_terminos):
     return seno_aproximado
 
 # Función para aproximar el valor del coseno usando la serie de Taylor
+'''
+Esta función recibe un ángulo x y un número de términos n_terminos para aproximar el valor del coseno
+'''
 def aproximar_coseno(x, n_terminos):
     coseno_aproximado = 0
     for n in range(n_terminos):
@@ -67,6 +81,9 @@ def aproximar_coseno(x, n_terminos):
     return coseno_aproximado
 
 # Función para aproximar el valor de la tangente usando la serie de Taylor
+'''
+Esta función recibe un ángulo x y un número de términos n_terminos para aproximar el valor de la tangente
+'''
 def aproximar_tangente(x, n_terminos):
     tangente_aproximada = 0
     for n in range(n_terminos):
@@ -117,9 +134,7 @@ def menu():
         print("5. Añadir datos tabla 3 (Serie Trigonométrica 3 - Tangente)")
         print("6. Dashboard")
         print("7. Salir")
-
         opcion = input("Seleccione una opción: ")
-
         if opcion == "1":
             registrar_usuario()
         elif opcion == "2":
