@@ -2,8 +2,8 @@ import mysql.connector
 
 def conectar():
     conexion = mysql.connector.connect(
-        host="localhost", #Cambiar por la ip
-        user="laura",  # Cambiar por el usuario de la base de datos
+        host="172.23.128.1", #Cambiar por la ip
+        user="admin",  # Cambiar por el usuario de la base de datos
         passwd="",     
         database="pparcial"
     )
