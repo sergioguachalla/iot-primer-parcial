@@ -3,90 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Series Trigonométricas</title>
+    <title>Dashboard de Usuarios</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        h1 {
-            text-align: center;
-        }
-        .graph-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin: 20px;
-        }
-        .graph {
-            width: 45%;
-            margin-bottom: 30px;
-        }
-    </style>
 </head>
 <body>
-    <h1>Dashboard de Series Trigonométricas por Usuario</h1>
-    
-    <!-- Contenedor para los gráficos -->
-    <div class="graph-container">
-        <div class="graph" id="seno"></div>
-        <div class="graph" id="coseno"></div>
-        <div class="graph" id="fourier"></div>
-        <div class="graph" id="errores"></div>
-    </div>
+    <h1>Gráficos de Series Trigonométricas por Usuario</h1>
+
+    <!-- Select para escoger el usuario -->
+    <label for="usuario">Seleccionar Usuario:</label>
+    <select id="usuario" onchange="cargarGraficos()">
+        <!-- Aquí se cargarán los usuarios desde el servidor -->
+    </select>
+
+    <!-- Divs para mostrar los gráficos -->
+    <div id="grafico_seno" style="width:100%;height:400px;"></div>
+    <div id="grafico_coseno" style="width:100%;height:400px;"></div>
+    <div id="grafico_fourier" style="width:100%;height:400px;"></div>
+    <div id="grafico_errores" style="width:100%;height:400px;"></div>
 
     <script>
-        function actualizarGraficos() {
-            $.getJSON('/datos_grafico', function(data) {
-                // Descomponer los datos de cada gráfico
-                var jsonData = JSON.parse(data);
-                var fig1Data = jsonData.data.slice(0, 3); // Datos para el gráfico del seno
-                var fig2Data = jsonData.data.slice(3, 6); // Datos para el gráfico del coseno
-                var fig3Data = jsonData.data.slice(6, 9); // Datos para el gráfico de la tangente
-
-                // Gráfico de Seno
-                Plotly.react('seno', fig1Data, {
-                    title: 'Serie de Seno',
-                    xaxis: { title: 'Usuarios' },
-                    yaxis: { title: 'Valores' }
-                });
-
-                // Gráfico de Coseno
-                Plotly.react('coseno', fig2Data, {
-                    title: 'Serie de Coseno',
-                    xaxis: { title: 'Usuarios' },
-                    yaxis: { title: 'Valores' }
-                });
-
-                // Gráfico de Fourier
-                Plotly.react('fourier', fig3Data, {
-                    title: 'Serie de Fourier',
-                    xaxis: { title: 'Usuarios' },
-                    yaxis: { title: 'Valores' }
-                });
-
-                // Gráfico de Errores Combinados
-                var combinedErrors = fig1Data[2].y.concat(fig2Data[2].y, fig3Data[2].y);
-                var combinedUsers = jsonData.data[0].x.concat(jsonData.data[3].x, jsonData.data[6].x);
-
-                Plotly.react('errores', [{
-                    x: combinedUsers,
-                    y: combinedErrors,
-                    mode: 'lines+markers',
-                    name: 'Errores Combinados',
-                    line: { color: 'red' }
-                }], {
-                    title: 'Errores Combinados de Seno, Coseno y Fourier',
-                    xaxis: { title: 'Usuarios' },
-                    yaxis: { title: 'Error' }
+        // Cargar la lista de usuarios al cargar la página
+        $(document).ready(function () {
+            $.getJSON('/usuarios', function (usuarios) {
+                var select = $('#usuario');
+                $.each(usuarios, function (key, usuario) {
+                    select.append('<option value="' + usuario.id + '">' + usuario.username + '</option>');
                 });
             });
-        }
+        });
 
-        // Actualizar cada 5 segundos
-        setInterval(actualizarGraficos, 5000);
-        actualizarGraficos();
+        // Cargar gráficos para el usuario seleccionado
+        function cargarGraficos() {
+            var usuarioId = $('#usuario').val();
+            $.getJSON('/datos_grafico/' + usuarioId, function (data) {
+                Plotly.react('grafico_seno', JSON.parse(data.seno).data, JSON.parse(data.seno).layout);
+                Plotly.react('grafico_coseno', JSON.parse(data.coseno).data, JSON.parse(data.coseno).layout);
+                Plotly.react('grafico_fourier', JSON.parse(data.fourier).data, JSON.parse(data.fourier).layout);
+                Plotly.react('grafico_errores', JSON.parse(data.errores).data, JSON.parse(data.errores).layout);
+            });
+        }
     </script>
 </body>
 </html>
