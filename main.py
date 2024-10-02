@@ -87,45 +87,37 @@ Esta función recibe un ángulo x y un número de términos n_terminos para apro
 '''
 def insertar_valores_fourier(n, userId):
     try:
-        conexion = conectar()
-        cursor = conexion.cursor()
+            conexion = conectar()  # Tu función para conectarte a la base de datos
+            cursor = conexion.cursor()
 
-        # Define Fourier series parameters
-        a0 = 0  # Constant term
-        a_coefficients = [random.uniform(-1, 1) for _ in range(n)]  # Random a_n coefficients
-        b_coefficients = [random.uniform(-1, 1) for _ in range(n)]  # Random b_n coefficients
+            # Define Fourier series parameters para onda cuadrada
+            a0 = 0  # Término constante
 
-        for i in range(1, n):  # Start loop from 1 to avoid division by zero
-            # Generate a sample value using the Fourier series formula
-            x = 2 * np.pi * i / n  # Use 'i' for the loop variable
-            
-            fourier_value = a0 / 2
-            fourier_value += a_coefficients[i - 1] * np.cos(i * x)
-            fourier_value += b_coefficients[i - 1] * np.sin(i * x)
+            for i in range(1, n):  # Iniciamos desde 1
+                x = 2 * math.pi * i / n  # x es el valor angular
+                fourier_value = a0 / 2
 
-            print(i, fourier_value)
-            Conruido = fourier_value
-            error = random.uniform(-0.1, 0.1)  # Example error term
+                # Solo los términos impares de la serie de Fourier
+                for k in range(1, n, 2):  # Solo términos impares
+                    fourier_value += (4 / math.pi) * (1 / k) * np.sin(k * x)
 
-            # SQL to insert data into regfourier
-            sql = "INSERT INTO serie_trig_3 (valor_aproximado, valor_real, error, usuario_id) VALUES (%s, %s, %s, %s)"
-            fourier_value_python = float(fourier_value)
-            Conruido_python = float(Conruido)
-            error_python = float(error)
-            valores = (fourier_value_python, Conruido_python, error_python, userId)
+                print(i, fourier_value)
+                valor_real = fourier_value
+                error = random.uniform(-0.1, 0.1)  # Término de error
 
+                # SQL para insertar los datos en la tabla regfourier
+                sql = "INSERT INTO serie_trig_3 (valor_aproximado, valor_real, error, usuario_id) VALUES (%s, %s, %s, %s)"
+                valores = (float(fourier_value), float(valor_real), float(error), userId)
 
-            # Execute the query and commit
-            cursor.execute(sql, valores)
-            conexion.commit()
+                # Ejecutamos la consulta y hacemos commit
+                cursor.execute(sql, valores)
+                conexion.commit()
 
-        cursor.close()
-        conexion.close()
+            cursor.close()
+            conexion.close()
 
     except Exception as e:
-        print(f"Error: {e}")
-
-
+            print(f"Error: {e}")
 # Función para insertar datos de aproximaciones trigonométricas con el usuario_id
 def insertar_aproximaciones_trig(tabla, funcion_real, funcion_aproximada, num_terminos, usuario_id):
     conexion = conectar()
