@@ -26,7 +26,6 @@
     <div id="grafico_errores" style="width: 100%; height: 400px;"></div>
 
     <script>
-        // Función para actualizar los gráficos
         function actualizarGraficos() {
             fetch('/datos_grafico')
                 .then(response => response.json())
@@ -37,28 +36,24 @@
                     const erroresDiv = document.getElementById('grafico_errores');
                     const parsedData = JSON.parse(data);
 
-                    // Gráfico de Seno (valores reales y aproximados)
                     const senoData = [
                         parsedData.data[0], // Seno Real
                         parsedData.data[1]  // Seno Aproximado
                     ];
                     Plotly.react(senoDiv, senoData, parsedData.layout);
 
-                    // Gráfico de Coseno (valores reales y aproximados)
                     const cosenoData = [
                         parsedData.data[3], // Coseno Real
                         parsedData.data[4]  // Coseno Aproximado
                     ];
                     Plotly.react(cosenoDiv, cosenoData, parsedData.layout);
 
-                    // Gráfico de Fourier (valores reales y aproximados)
                     const fourierData = [
                         parsedData.data[6], // Fourier Real
                         parsedData.data[7]  // Fourier Aproximado
                     ];
                     Plotly.react(fourierDiv, fourierData, parsedData.layout);
 
-                    // Gráfico de Errores (para las tres funciones)
                     const erroresData = [
                         parsedData.data[2], // Error Seno
                         parsedData.data[5], // Error Coseno
@@ -69,7 +64,6 @@
                 .catch(error => console.error('Error al obtener los datos del gráfico:', error));
         }
 
-        // Llamamos a la función para cargar los gráficos cuando se carga la página
         window.onload = actualizarGraficos;
     </script>
 </body>

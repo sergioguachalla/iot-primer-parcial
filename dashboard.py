@@ -2,14 +2,12 @@ from flask import Flask, render_template, jsonify
 import mysql.connector
 import plotly.graph_objs as go
 import plotly.io as pio
-import numpy as np  # Necesario para manejar ángulos en radianes
+import numpy as np  
 from datetime import datetime
 from connection import conectar
 
-# Inicializar la aplicación Flask
 app = Flask(__name__)
 
-# Función para obtener los datos de las series trigonométricas
 def obtener_datos_usuario():
     conexion = conectar()
     cursor = conexion.cursor()
@@ -28,9 +26,7 @@ def obtener_datos_usuario():
     cursor.execute(sql)
     resultados = cursor.fetchall()
 
-    # Aquí en lugar de usar los usuarios como x, usaremos un rango de ángulos en radianes
-    angulos = np.linspace(0, 2 * np.pi, len(resultados))  # Generamos 'n' ángulos entre 0 y 2π
-
+    angulos = np.linspace(0, 2 * np.pi, len(resultados)) 
     datos = {
         "angulos": angulos,  # Ángulos en radianes
         "seno": {"valor_real": [], "valor_aproximado": [], "error": []},
@@ -57,17 +53,14 @@ def obtener_datos_usuario():
 
     return datos
 
-# Ruta principal que carga el dashboard
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Ruta para actualizar los datos del gráfico
 @app.route('/datos_grafico', methods=['GET'])
 def datos_grafico():
     datos = obtener_datos_usuario()
 
-    # Crear la gráfica usando Plotly
     trace1 = go.Scatter(x=datos["angulos"], y=datos["seno"]["valor_real"], mode='lines+markers', name='Seno Real')
     trace2 = go.Scatter(x=datos["angulos"], y=datos["seno"]["valor_aproximado"], mode='lines+markers', name='Seno Aproximado')
     trace3 = go.Scatter(x=datos["angulos"], y=datos["seno"]["error"], mode='lines', name='Error Seno', line=dict(color='red', dash='dash'))
@@ -80,10 +73,9 @@ def datos_grafico():
     trace8 = go.Scatter(x=datos["angulos"], y=datos["fourier"]["valor_aproximado"], mode='lines+markers', name='Fourier Aproximado')
     trace9 = go.Scatter(x=datos["angulos"], y=datos["fourier"]["error"], mode='lines', name='Error Fourier', line=dict(color='green', dash='dash'))
 
-    # Combinamos todos los gráficos en uno solo
     layout = go.Layout(
         title=f'Gráfico de series trigonométricas - {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}',
-        xaxis_title='Ángulo (radianes)',  # Cambiado a ángulo en radianes
+        xaxis_title='Ángulo (radianes)',  
         yaxis_title='Valores de la serie',
         legend=dict(x=0, y=1),
         margin=dict(l=40, r=40, t=40, b=40)
@@ -91,15 +83,12 @@ def datos_grafico():
 
     fig = go.Figure(data=[trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9], layout=layout)
 
-    # Convertir la gráfica a JSON para que pueda ser consumida por el frontend
     graph_json = pio.to_json(fig)
 
     return jsonify(graph_json)
 
-# Función para iniciar el servidor del dashboard
 def iniciar_dashboard():
     app.run(debug=True, use_reloader=False)
 
-# Si quieres iniciar el dashboard desde un archivo separado, puedes hacer lo siguiente:
 if __name__ == "__main__":
     iniciar_dashboard()
