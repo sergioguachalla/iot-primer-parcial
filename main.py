@@ -85,7 +85,7 @@ def aproximar_coseno(x, n_terminos):
 '''
 Esta función recibe un ángulo x y un número de términos n_terminos para aproximar el valor de la tangente
 '''
-def insertar_valores_fourier(n):
+def insertar_valores_fourier(n, userId):
     try:
         conexion = conectar()
         cursor = conexion.cursor()
@@ -108,11 +108,12 @@ def insertar_valores_fourier(n):
             error = random.uniform(-0.1, 0.1)  # Example error term
 
             # SQL to insert data into regfourier
-            sql = "INSERT INTO serie_trig_3 (valor_aproximado, valor_real, error) VALUES (%s, %s, %s)"
+            sql = "INSERT INTO serie_trig_3 (valor_aproximado, valor_real, error, usuario_id) VALUES (%s, %s, %s, %s)"
             fourier_value_python = float(fourier_value)
             Conruido_python = float(Conruido)
             error_python = float(error)
-            valores = (fourier_value_python, Conruido_python, error_python)
+            valores = (fourier_value_python, Conruido_python, error_python, userId)
+
 
             # Execute the query and commit
             cursor.execute(sql, valores)
@@ -178,7 +179,7 @@ def menu():
         elif opcion == "5":
             if usuario_id:
                 num_terminos = int(input("Ingrese el número de términos a añadir: "))
-                insertar_valores_fourier(num_terminos)
+                insertar_valores_fourier(num_terminos,usuario_id)
             else:
                 print("Debes iniciar sesión primero.")
         elif opcion == "6":
