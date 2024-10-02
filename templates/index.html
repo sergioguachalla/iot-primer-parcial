@@ -1,48 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Usuarios</title>
+    <title>Dashboard de Series Trigonométricas</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <h1>Gráficos de Series Trigonométricas por Usuario</h1>
-
-    <!-- Select para escoger el usuario -->
-    <label for="usuario">Seleccionar Usuario:</label>
-    <select id="usuario" onchange="cargarGraficos()">
-        <!-- Aquí se cargarán los usuarios desde el servidor -->
-    </select>
-
-    <!-- Divs para mostrar los gráficos -->
-    <div id="grafico_seno" style="width:100%;height:400px;"></div>
-    <div id="grafico_coseno" style="width:100%;height:400px;"></div>
-    <div id="grafico_fourier" style="width:100%;height:400px;"></div>
-    <div id="grafico_errores" style="width:100%;height:400px;"></div>
+    <h1>Dashboard de Series Trigonométricas</h1>
+    
+    <!-- Gráfico de Seno -->
+    <h2>Gráfico de Seno</h2>
+    <div id="grafico_seno" style="width: 100%; height: 400px;"></div>
+    
+    <!-- Gráfico de Coseno -->
+    <h2>Gráfico de Coseno</h2>
+    <div id="grafico_coseno" style="width: 100%; height: 400px;"></div>
+    
+    <!-- Gráfico de Fourier -->
+    <h2>Gráfico de Fourier</h2>
+    <div id="grafico_fourier" style="width: 100%; height: 400px;"></div>
+    
+    <!-- Gráfico de Errores -->
+    <h2>Gráfico de Errores</h2>
+    <div id="grafico_errores" style="width: 100%; height: 400px;"></div>
 
     <script>
-        // Cargar la lista de usuarios al cargar la página
-        $(document).ready(function () {
-            $.getJSON('/usuarios', function (usuarios) {
-                var select = $('#usuario');
-                $.each(usuarios, function (key, usuario) {
-                    select.append('<option value="' + usuario.id + '">' + usuario.username + '</option>');
-                });
-            });
-        });
+        // Función para actualizar los gráficos
+        function actualizarGraficos() {
+            fetch('/datos_grafico')
+                .then(response => response.json())
+                .then(data => {
+                    const senoDiv = document.getElementById('grafico_seno');
+                    const cosenoDiv = document.getElementById('grafico_coseno');
+                    const fourierDiv = document.getElementById('grafico_fourier');
+                    const erroresDiv = document.getElementById('grafico_errores');
+                    const parsedData = JSON.parse(data);
 
-        // Cargar gráficos para el usuario seleccionado
-        function cargarGraficos() {
-            var usuarioId = $('#usuario').val();
-            $.getJSON('/datos_grafico/' + usuarioId, function (data) {
-                Plotly.react('grafico_seno', JSON.parse(data.seno).data, JSON.parse(data.seno).layout);
-                Plotly.react('grafico_coseno', JSON.parse(data.coseno).data, JSON.parse(data.coseno).layout);
-                Plotly.react('grafico_fourier', JSON.parse(data.fourier).data, JSON.parse(data.fourier).layout);
-                Plotly.react('grafico_errores', JSON.parse(data.errores).data, JSON.parse(data.errores).layout);
-            });
+                    // Gráfico de Seno (valores reales y aproximados)
+                    const senoData = [
+                        parsedData.data[0], // Seno Real
+                        parsedData.data[1]  // Seno Aproximado
+                    ];
+                    Plotly.react(senoDiv, senoData, parsedData.layout);
+
+                    // Gráfico de Coseno (valores reales y aproximados)
+                    const cosenoData = [
+                        parsedData.data[3], // Coseno Real
+                        parsedData.data[4]  // Coseno Aproximado
+                    ];
+                    Plotly.react(cosenoDiv, cosenoData, parsedData.layout);
+
+                    // Gráfico de Fourier (valores reales y aproximados)
+                    const fourierData = [
+                        parsedData.data[6], // Fourier Real
+                        parsedData.data[7]  // Fourier Aproximado
+                    ];
+                    Plotly.react(fourierDiv, fourierData, parsedData.layout);
+
+                    // Gráfico de Errores (para las tres funciones)
+                    const erroresData = [
+                        parsedData.data[2], // Error Seno
+                        parsedData.data[5], // Error Coseno
+                        parsedData.data[8]  // Error Fourier
+                    ];
+                    Plotly.react(erroresDiv, erroresData, parsedData.layout);
+                })
+                .catch(error => console.error('Error al obtener los datos del gráfico:', error));
         }
+
+        // Llamamos a la función para cargar los gráficos cuando se carga la página
+        window.onload = actualizarGraficos;
     </script>
 </body>
 </html>
