@@ -80,26 +80,46 @@ def aproximar_coseno(x, n_terminos):
         coseno_aproximado += coeficiente * (numerador / denominador)
     return coseno_aproximado
 
-# Función para aproximar el valor de la tangente usando la serie de Taylor
+# Función para la serie de Fourier
 '''
 Esta función recibe un ángulo x y un número de términos n_terminos para aproximar el valor de la tangente
 '''
-def aproximar_tangente(x, n_terminos):
-    tangente_aproximada = 0
-    for n in range(n_terminos):
-        if n == 0:
-            coeficiente = 1
-        elif n == 1:
-            coeficiente = 1/3
-        elif n == 2:
-            coeficiente = 2/15
-        elif n == 3:
-            coeficiente = 17/315
-        else:
-            break
+def insertar_valores_fourier(n):
+    try:
         
-        tangente_aproximada += coeficiente * x**(2*n + 1)
-    return tangente_aproximada
+        conexion = conectar()
+        cursor = conexion.cursor()
+
+        # Define Fourier series parameters
+        a0 = 0  # Constant term
+        a_coefficients = [random.uniform(-1, 1) for _ in range(num_terminos)]  # Random a_n coefficients
+        b_coefficients = [random.uniform(-1, 1) for _ in range(num_terminos)]  # Random b_n coefficients
+
+        for n in range(num_terminos):
+            # Generate a sample value using the Fourier series formula
+            x = 2 * np.pi * n / num_terminos  # Example input
+            fourier_value = a0 / 2
+            fourier_value += a_coefficients[n] * np.cos(n * x)
+            fourier_value += b_coefficients[n] * np.sin(n * x)
+
+            print(n, fourier_value)
+            Conruido = fourier_value
+            error = random.uniform(-0.1, 0.1)  # Example error term
+
+            # SQL to insert data into regfourier
+            sql = "INSERT INTO serie_trig_3 (valor_aproximado, valor_real, error) VALUES (%s, %s, %s)"
+            valores = (fourier_value, Conruido, error)
+
+            # Execute the query and commit
+            cursor.execute(sql, valores)
+            conexion.commit()
+
+        messagebox.showinfo("Éxito", "Valores insertados correctamente.")
+        cursor.close()
+        conexion.close()
+
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
 
 # Función para insertar datos de aproximaciones trigonométricas con el usuario_id
 def insertar_aproximaciones_trig(tabla, funcion_real, funcion_aproximada, num_terminos, usuario_id):
@@ -131,7 +151,7 @@ def menu():
         print("2. Iniciar sesión")
         print("3. Añadir datos tabla 1 (Serie Trigonométrica 1 - Seno)")
         print("4. Añadir datos tabla 2 (Serie Trigonométrica 2 - Coseno)")
-        print("5. Añadir datos tabla 3 (Serie Trigonométrica 3 - Tangente)")
+        print("5. Añadir datos tabla 3 (Serie Trigonométrica 3 - Fourier)")
         print("6. Dashboard")
         print("7. Salir")
         opcion = input("Seleccione una opción: ")
@@ -154,7 +174,7 @@ def menu():
         elif opcion == "5":
             if usuario_id:
                 num_terminos = int(input("Ingrese el número de términos a añadir: "))
-                insertar_aproximaciones_trig("serie_trig_3", math.tan, aproximar_tangente, num_terminos, usuario_id)
+                insertar_valores_fourier(num_terminos)
             else:
                 print("Debes iniciar sesión primero.")
         elif opcion == "6":
