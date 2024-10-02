@@ -87,29 +87,24 @@ Esta función recibe un ángulo x y un número de términos n_terminos para apro
 '''
 def insertar_valores_fourier(n, userId):
     try:
-            conexion = conectar()  # Tu función para conectarte a la base de datos
+            conexion = conectar() 
             cursor = conexion.cursor()
+            a0 = 0 
 
-            # Define Fourier series parameters para onda cuadrada
-            a0 = 0  # Término constante
-
-            for i in range(1, n):  # Iniciamos desde 1
-                x = 2 * math.pi * i / n  # x es el valor angular
+            for i in range(1, n):  
+                x = 2 * math.pi * i / n
                 fourier_value = a0 / 2
 
-                # Solo los términos impares de la serie de Fourier
-                for k in range(1, n, 2):  # Solo términos impares
+                for k in range(1, n, 2):  
                     fourier_value += (4 / math.pi) * (1 / k) * np.sin(k * x)
 
                 print(i, fourier_value)
                 valor_real = fourier_value
-                error = random.uniform(-0.1, 0.1)  # Término de error
+                error = random.uniform(-0.1, 0.1)  
 
-                # SQL para insertar los datos en la tabla regfourier
                 sql = "INSERT INTO serie_trig_3 (valor_aproximado, valor_real, error, usuario_id) VALUES (%s, %s, %s, %s)"
                 valores = (float(fourier_value), float(valor_real), float(error), userId)
 
-                # Ejecutamos la consulta y hacemos commit
                 cursor.execute(sql, valores)
                 conexion.commit()
 
