@@ -119,10 +119,10 @@ def insertar_aproximaciones_trig(tabla, funcion_real, funcion_aproximada, num_te
     cursor = conexion.cursor()
 
     for i in range(1, num_terminos + 1):
-        x = random.uniform(0, 2 * math.pi)  # Ángulo en radianes aleatorio entre 0 y 2π
-        valor_real = funcion_real(x)  # Calcula el valor real usando la función matemática de Python
-        valor_aproximado = funcion_aproximada(x, 5)  # Calcula la aproximación usando 5 términos de Taylor
-        error = valor_aproximado - valor_real  # Error de la aproximación
+        x = random.uniform(0, 2 * math.pi) 
+        valor_real = funcion_real(x)  
+        valor_aproximado = funcion_aproximada(x, 5) 
+        error = valor_aproximado - valor_real  
 
         # Inserta los valores en la tabla correspondiente junto con el usuario_id
         sql = f"INSERT INTO {tabla} (valor_aproximado, valor_real, error, usuario_id) VALUES (%s, %s, %s, %s)"
@@ -136,7 +136,7 @@ def insertar_aproximaciones_trig(tabla, funcion_real, funcion_aproximada, num_te
 
 # Menú interactivo
 def menu():
-    usuario_id = None  # Variable para almacenar el ID del usuario tras iniciar sesión
+    usuario_id = None 
     while True:
         print("\n----- Menú -----")
         print("1. Registrar usuario")
@@ -150,7 +150,7 @@ def menu():
         if opcion == "1":
             registrar_usuario()
         elif opcion == "2":
-            usuario_id = iniciar_sesion()  # Al iniciar sesión se guarda el ID del usuario
+            usuario_id = iniciar_sesion() 
         elif opcion == "3":
             if usuario_id:
                 num_terminos = int(input("Ingrese el número de términos a añadir: "))
