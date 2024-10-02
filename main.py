@@ -4,7 +4,7 @@ import getpass
 import threading
 from connection import conectar  # Importa la función conectar desde connection.py
 from dashboard import iniciar_dashboard
-
+import numpy as np
 
 # Función para registrar un usuario
 def registrar_usuario():
@@ -92,12 +92,12 @@ def insertar_valores_fourier(n):
 
         # Define Fourier series parameters
         a0 = 0  # Constant term
-        a_coefficients = [random.uniform(-1, 1) for _ in range(num_terminos)]  # Random a_n coefficients
-        b_coefficients = [random.uniform(-1, 1) for _ in range(num_terminos)]  # Random b_n coefficients
+        a_coefficients = [random.uniform(-1, 1) for _ in range(n)]  # Random a_n coefficients
+        b_coefficients = [random.uniform(-1, 1) for _ in range(n)]  # Random b_n coefficients
 
-        for n in range(num_terminos):
+        for n in range(n):
             # Generate a sample value using the Fourier series formula
-            x = 2 * np.pi * n / num_terminos  # Example input
+            x = 2 * np.pi * n / n  # Example input
             fourier_value = a0 / 2
             fourier_value += a_coefficients[n] * np.cos(n * x)
             fourier_value += b_coefficients[n] * np.sin(n * x)
@@ -114,12 +114,11 @@ def insertar_valores_fourier(n):
             cursor.execute(sql, valores)
             conexion.commit()
 
-        messagebox.showinfo("Éxito", "Valores insertados correctamente.")
         cursor.close()
         conexion.close()
 
     except Exception as e:
-        messagebox.showerror("Error", str(e))
+        print(f"Error: {e}")
 
 # Función para insertar datos de aproximaciones trigonométricas con el usuario_id
 def insertar_aproximaciones_trig(tabla, funcion_real, funcion_aproximada, num_terminos, usuario_id):
