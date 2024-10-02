@@ -32,7 +32,7 @@
     <div class="graph-container">
         <div class="graph" id="seno"></div>
         <div class="graph" id="coseno"></div>
-        <div class="graph" id="tangente"></div>
+        <div class="graph" id="fourier"></div>
         <div class="graph" id="errores"></div>
     </div>
 
@@ -59,9 +59,9 @@
                     yaxis: { title: 'Valores' }
                 });
 
-                // Gráfico de Tangente
-                Plotly.react('tangente', fig3Data, {
-                    title: 'Serie de Tangente',
+                // Gráfico de Fourier
+                Plotly.react('fourier', fig3Data, {
+                    title: 'Serie de Fourier',
                     xaxis: { title: 'Usuarios' },
                     yaxis: { title: 'Valores' }
                 });
@@ -77,7 +77,7 @@
                     name: 'Errores Combinados',
                     line: { color: 'red' }
                 }], {
-                    title: 'Errores Combinados de Seno, Coseno y Tangente',
+                    title: 'Errores Combinados de Seno, Coseno y Fourier',
                     xaxis: { title: 'Usuarios' },
                     yaxis: { title: 'Error' }
                 });

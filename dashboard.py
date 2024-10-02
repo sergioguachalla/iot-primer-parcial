@@ -41,7 +41,7 @@ def obtener_datos_usuario():
         "usuarios": [],
         "seno": {"valor_real": [], "valor_aproximado": [], "error": []},
         "coseno": {"valor_real": [], "valor_aproximado": [], "error": []},
-        "tangente": {"valor_real": [], "valor_aproximado": [], "error": []},
+        "fourier": {"valor_real": [], "valor_aproximado": [], "error": []},
     }
 
     for fila in resultados:
@@ -54,10 +54,10 @@ def obtener_datos_usuario():
         datos["coseno"]["valor_real"].append(fila[4])
         datos["coseno"]["valor_aproximado"].append(fila[5])
         datos["coseno"]["error"].append(fila[6])
-        # Tangente
-        datos["tangente"]["valor_real"].append(fila[7])
-        datos["tangente"]["valor_aproximado"].append(fila[8])
-        datos["tangente"]["error"].append(fila[9])
+        # Fourier
+        datos["fourier"]["valor_real"].append(fila[7])
+        datos["fourier"]["valor_aproximado"].append(fila[8])
+        datos["fourier"]["error"].append(fila[9])
 
     cursor.close()
     conexion.close()
@@ -83,9 +83,9 @@ def datos_grafico():
     trace5 = go.Scatter(x=datos["usuarios"], y=datos["coseno"]["valor_aproximado"], mode='lines+markers', name='Coseno Aproximado')
     trace6 = go.Scatter(x=datos["usuarios"], y=datos["coseno"]["error"], mode='lines', name='Error Coseno', line=dict(color='blue', dash='dash'))
 
-    trace7 = go.Scatter(x=datos["usuarios"], y=datos["tangente"]["valor_real"], mode='lines+markers', name='Tangente Real')
-    trace8 = go.Scatter(x=datos["usuarios"], y=datos["tangente"]["valor_aproximado"], mode='lines+markers', name='Tangente Aproximado')
-    trace9 = go.Scatter(x=datos["usuarios"], y=datos["tangente"]["error"], mode='lines', name='Error Tangente', line=dict(color='green', dash='dash'))
+    trace7 = go.Scatter(x=datos["usuarios"], y=datos["fourier"]["valor_real"], mode='lines+markers', name='fourier Real')
+    trace8 = go.Scatter(x=datos["usuarios"], y=datos["fourier"]["valor_aproximado"], mode='lines+markers', name='fourier Aproximado')
+    trace9 = go.Scatter(x=datos["usuarios"], y=datos["fourier"]["error"], mode='lines', name='Error fourier', line=dict(color='green', dash='dash'))
 
     # Combinamos todos los gráficos en uno solo
     layout = go.Layout(

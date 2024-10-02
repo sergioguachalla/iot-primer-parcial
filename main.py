@@ -2,6 +2,7 @@ import math
 import random
 import getpass
 import threading
+import numpy as np
 from connection import conectar  # Importa la función conectar desde connection.py
 from dashboard import iniciar_dashboard
 
@@ -86,14 +87,13 @@ Esta función recibe un ángulo x y un número de términos n_terminos para apro
 '''
 def insertar_valores_fourier(n):
     try:
-        
         conexion = conectar()
         cursor = conexion.cursor()
 
         # Define Fourier series parameters
         a0 = 0  # Constant term
-        a_coefficients = [random.uniform(-1, 1) for _ in range(num_terminos)]  # Random a_n coefficients
-        b_coefficients = [random.uniform(-1, 1) for _ in range(num_terminos)]  # Random b_n coefficients
+        a_coefficients = [random.uniform(-1, 1) for _ in range(n)]  # Random a_n coefficients
+        b_coefficients = [random.uniform(-1, 1) for _ in range(n)]  # Random b_n coefficients
 
         for n in range(n):
             # Generate a sample value using the Fourier series formula
