@@ -80,27 +80,10 @@ def aproximar_coseno(x, n_terminos):
         coseno_aproximado += coeficiente * (numerador / denominador)
     return coseno_aproximado
 
-# Función para aproximar el valor de la tangente usando la serie de Taylor
+# Función para la serie de Fourier
 '''
 Esta función recibe un ángulo x y un número de términos n_terminos para aproximar el valor de la tangente
 '''
-def aproximar_tangente(x, n_terminos):
-    tangente_aproximada = 0
-    for n in range(n_terminos):
-        if n == 0:
-            coeficiente = 1
-        elif n == 1:
-            coeficiente = 1/3
-        elif n == 2:
-            coeficiente = 2/15
-        elif n == 3:
-            coeficiente = 17/315
-        else:
-            break
-        
-        tangente_aproximada += coeficiente * x**(2*n + 1)
-    return tangente_aproximada
-
 def insertar_valores_fourier(n):
     try:
         
