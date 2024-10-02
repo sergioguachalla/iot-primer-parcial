@@ -37,39 +37,34 @@
                     const erroresDiv = document.getElementById('grafico_errores');
                     const parsedData = JSON.parse(data);
 
-                    // Gráfico de Seno (valores reales y aproximados)
                     const senoData = [
-                        parsedData.data[0], // Seno Real
-                        parsedData.data[1]  // Seno Aproximado
+                        parsedData.data[0], 
+                        parsedData.data[1]   
                     ];
                     Plotly.react(senoDiv, senoData, parsedData.layout);
 
-                    // Gráfico de Coseno (valores reales y aproximados)
                     const cosenoData = [
-                        parsedData.data[3], // Coseno Real
-                        parsedData.data[4]  // Coseno Aproximado
+                        parsedData.data[3], 
+                        parsedData.data[4]  
                     ];
                     Plotly.react(cosenoDiv, cosenoData, parsedData.layout);
 
-                    // Gráfico de Fourier (valores reales y aproximados)
                     const fourierData = [
-                        parsedData.data[6], // Fourier Real
-                        parsedData.data[7]  // Fourier Aproximado
+                        parsedData.data[6], 
+                        parsedData.data[7]  
                     ];
                     Plotly.react(fourierDiv, fourierData, parsedData.layout);
 
-                    // Gráfico de Errores (para las tres funciones)
                     const erroresData = [
-                        parsedData.data[2], // Error Seno
-                        parsedData.data[5], // Error Coseno
-                        parsedData.data[8]  // Error Fourier
+                        parsedData.data[2], 
+                        parsedData.data[5], 
+                        parsedData.data[8]  
                     ];
                     Plotly.react(erroresDiv, erroresData, parsedData.layout);
                 })
                 .catch(error => console.error('Error al obtener los datos del gráfico:', error));
         }
 
-        // Llamamos a la función para cargar los gráficos cuando se carga la página
         window.onload = actualizarGraficos;
     </script>
 </body>
